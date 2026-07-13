@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Kegiatan Belajar</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+  <table id="kegiatanTable" border="1">
+    <tr>
+      <th>Hari</th><th>Tanggal</th><th>Jam ke-</th><th>Kelas</th>
+      <th>Mata Pelajaran</th><th>No KI/KD</th><th>Kegiatan</th>
+      <th>Hasil</th><th>Vol</th><th>S</th><th>I</th><th>A</th><th>Ket</th>
+    </tr>
+  </table>
+  <button onclick="addRow()">Tambahkan baris baru</button>
+  <button onclick="deleteRow()">Hapus baris terakhir</button>
+  <button onclick="downloadExcel()">Download Excel</button>
+
+<script>
+function addRow() {
+  let table = document.getElementById("kegiatanTable");
+  let row = table.insertRow(-1);
+  for (let i=0; i<13; i++) {
+    let cell = row.insertCell(i);
+    cell.innerHTML = "<input type='text'>";
+  }
+}
+function deleteRow() {
+  let table = document.getElementById("kegiatanTable");
+  if (table.rows.length > 1) table.deleteRow(-1);
+}
+function downloadExcel() {
+  var wb = XLSX.utils.table_to_book(document.getElementById('kegiatanTable'));
+  XLSX.writeFile(wb, 'kegiatan.xlsx');
+}
+</script>
+</body>
+</html>
