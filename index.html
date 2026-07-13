@@ -1,37 +1,117 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Form Kegiatan Belajar</title>
+  <title>Jurnal Mengajar & LKH</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
-  <table id="kegiatanTable" border="1">
-    <tr>
-      <th>Hari</th><th>Tanggal</th><th>Jam ke-</th><th>Kelas</th>
-      <th>Mata Pelajaran</th><th>No KI/KD</th><th>Kegiatan</th>
-      <th>Hasil</th><th>Vol</th><th>S</th><th>I</th><th>A</th><th>Ket</th>
-    </tr>
-  </table>
-  <button onclick="addRow()">Tambahkan baris baru</button>
-  <button onclick="deleteRow()">Hapus baris terakhir</button>
-  <button onclick="downloadExcel()">Download Excel</button>
+<h2>JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN</h2>
+
+<table id="jurnalTable" border="1">
+  <tr>
+    <th>No</th>
+    <th>Hari</th>
+    <th>Tanggal</th>
+    <th>Jam ke-</th>
+    <th>Kelas/Ekskul</th>
+    <th>Mata Pelajaran</th>
+    <th>No KI/KD</th>
+    <th>Kegiatan/Materi</th>
+    <th>Hasil</th>
+    <th>Vol</th>
+    <th>S</th>
+    <th>I</th>
+    <th>A</th>
+    <th>Ket</th>
+  </tr>
+</table>
+
+<button onclick="addRow()">Tambahkan baris baru</button>
+<button onclick="deleteRow()">Hapus baris terakhir</button>
+<button onclick="downloadExcel()">Download Excel</button>
 
 <script>
-function addRow() {
-  let table = document.getElementById("kegiatanTable");
-  let row = table.insertRow(-1);
-  for (let i=0; i<13; i++) {
-    let cell = row.insertCell(i);
-    cell.innerHTML = "<input type='text'>";
-  }
+// otomatis isi Hari dari input tanggal
+function getHari(tanggal) {
+  let hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  let d = new Date(tanggal);
+  return hari[d.getDay()];
 }
+
+function addRow() {
+  let table = document.getElementById("jurnalTable");
+  let row = table.insertRow(-1);
+
+  // No urut otomatis
+  let cellNo = row.insertCell(0);
+  cellNo.innerHTML = table.rows.length - 1;
+
+  // Hari (readonly, otomatis dari tanggal)
+  let cellHari = row.insertCell(1);
+  cellHari.innerHTML = "<input type='text' id='hari"+(table.rows.length-1)+"' readonly>";
+
+  // Tanggal (input date)
+  let cellTgl = row.insertCell(2);
+  cellTgl.innerHTML = "<input type='date' onchange='updateHari(this)'>";
+
+  // Jam ke-
+  row.insertCell(3).innerHTML = "<input type='text'>";
+
+  // Kelas/Ekskul (dropdown)
+  row.insertCell(4).innerHTML = `
+    <select>
+      <option value='VII A'>VII A</option>
+      <option value='VII B'>VII B</option>
+      <option value='VIII A'>VIII A</option>
+      <option value='VIII B'>VIII B</option>
+      <option value='IX A'>IX A</option>
+      <option value='IX B'>IX B</option>
+    </select>`;
+
+  // Mata Pelajaran (dropdown)
+  row.insertCell(5).innerHTML = `
+    <select>
+      <option value='SKI'>SKI</option>
+      <option value='Akidah Akhlak'>Akidah Akhlak</option>
+      <option value='Fikih'>Fikih</option>
+    </select>`;
+
+  // No KI/KD
+  row.insertCell(6).innerHTML = "<input type='text'>";
+
+  // Kegiatan/Materi
+  row.insertCell(7).innerHTML = "<input type='text'>";
+
+  // Hasil (readonly default "Terlaksana")
+  row.insertCell(8).innerHTML = "<input type='text' value='Terlaksana' readonly>";
+
+  // Vol
+  row.insertCell(9).innerHTML = "<input type='text'>";
+
+  // Absensi S, I, A
+  row.insertCell(10).innerHTML = "<input type='number' min='0'>";
+  row.insertCell(11).innerHTML = "<input type='number' min='0'>";
+  row.insertCell(12).innerHTML = "<input type='number' min='0'>";
+
+  // Ket
+  row.insertCell(13).innerHTML = "<input type='text'>";
+}
+
+// update Hari otomatis dari tanggal
+function updateHari(input) {
+  let rowIndex = input.parentNode.parentNode.rowIndex;
+  let hariCell = document.getElementById("hari"+rowIndex);
+  hariCell.value = getHari(input.value);
+}
+
 function deleteRow() {
-  let table = document.getElementById("kegiatanTable");
+  let table = document.getElementById("jurnalTable");
   if (table.rows.length > 1) table.deleteRow(-1);
 }
+
 function downloadExcel() {
-  var wb = XLSX.utils.table_to_book(document.getElementById('kegiatanTable'));
-  XLSX.writeFile(wb, 'kegiatan.xlsx');
+  var wb = XLSX.utils.table_to_book(document.getElementById('jurnalTable'));
+  XLSX.writeFile(wb, 'Jurnal_LKH.xlsx');
 }
 </script>
 </body>
