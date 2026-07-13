@@ -3,11 +3,42 @@
 <head>
   <title>Jurnal Mengajar & LKH</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: auto;
+      table-layout: fixed;
+    }
+    th, td {
+      border: 1px solid black;
+      text-align: center;
+      padding: 2px;
+    }
+    /* Atur lebar kolom sesuai rasio */
+    th:nth-child(1), td:nth-child(1) { width:26px; }
+    th:nth-child(2), td:nth-child(2) { width:47px; }
+    th:nth-child(3), td:nth-child(3) { width:111px; }
+    th:nth-child(4), td:nth-child(4) { width:80px; }
+    th:nth-child(5), td:nth-child(5) { width:50px; }
+    th:nth-child(6), td:nth-child(6) { width:97px; }
+    th:nth-child(7), td:nth-child(7) { width:44px; }
+    th:nth-child(8), td:nth-child(8) { width:326px; }
+    th:nth-child(9), td:nth-child(9) { width:76px; }
+    th:nth-child(10), td:nth-child(10) { width:49px; }
+    th:nth-child(11), td:nth-child(11) { width:32px; }
+    th:nth-child(12), td:nth-child(12) { width:32px; }
+    th:nth-child(13), td:nth-child(13) { width:32px; }
+    th:nth-child(14), td:nth-child(14) { width:85px; }
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  </style>
 </head>
 <body>
 <h2>JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN</h2>
 
-<table id="jurnalTable" border="1">
+<table id="jurnalTable">
   <tr>
     <th>No</th>
     <th>Hari</th>
@@ -31,7 +62,6 @@
 <button onclick="downloadExcel()">Download Excel</button>
 
 <script>
-// otomatis isi Hari dari input tanggal
 function getHari(tanggal) {
   let hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
   let d = new Date(tanggal);
@@ -43,21 +73,18 @@ function addRow() {
   let row = table.insertRow(-1);
 
   // No urut otomatis
-  let cellNo = row.insertCell(0);
-  cellNo.innerHTML = table.rows.length - 1;
+  row.insertCell(0).innerHTML = table.rows.length - 1;
 
-  // Hari (readonly, otomatis dari tanggal)
-  let cellHari = row.insertCell(1);
-  cellHari.innerHTML = "<input type='text' id='hari"+(table.rows.length-1)+"' readonly>";
+  // Hari (readonly)
+  row.insertCell(1).innerHTML = "<input type='text' id='hari"+(table.rows.length-1)+"' readonly>";
 
-  // Tanggal (input date)
-  let cellTgl = row.insertCell(2);
-  cellTgl.innerHTML = "<input type='date' onchange='updateHari(this)'>";
+  // Tanggal
+  row.insertCell(2).innerHTML = "<input type='date' onchange='updateHari(this)'>";
 
   // Jam ke-
   row.insertCell(3).innerHTML = "<input type='text'>";
 
-  // Kelas/Ekskul (dropdown)
+  // Kelas/Ekskul
   row.insertCell(4).innerHTML = `
     <select>
       <option value='VII A'>VII A</option>
@@ -68,7 +95,7 @@ function addRow() {
       <option value='IX B'>IX B</option>
     </select>`;
 
-  // Mata Pelajaran (dropdown)
+  // Mata Pelajaran
   row.insertCell(5).innerHTML = `
     <select>
       <option value='SKI'>SKI</option>
@@ -82,7 +109,7 @@ function addRow() {
   // Kegiatan/Materi
   row.insertCell(7).innerHTML = "<input type='text'>";
 
-  // Hasil (readonly default "Terlaksana")
+  // Hasil (readonly)
   row.insertCell(8).innerHTML = "<input type='text' value='Terlaksana' readonly>";
 
   // Vol
@@ -97,7 +124,6 @@ function addRow() {
   row.insertCell(13).innerHTML = "<input type='text'>";
 }
 
-// update Hari otomatis dari tanggal
 function updateHari(input) {
   let rowIndex = input.parentNode.parentNode.rowIndex;
   let hariCell = document.getElementById("hari"+rowIndex);
