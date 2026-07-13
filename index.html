@@ -6,16 +6,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-  <div id="kopSurat">
-    <h3>YAYASAN AL – IHSAN AL ISLAMI</h3>
-    <h4>MTs. AL IHSAN TANAH GROGOT</h4>
-    <p>NPSN: 30410000 | NSM: 12.12.64.01.0002</p>
-    <p>Alamat: Jl. Senaken Ds. Senaken RT. IV Tanah Grogot Kab. Paser - Kalimantan Timur 76211</p>
-    <p>Telp. 0543-5236320 | Email: mtsalihsan_senaken@yahoo.com</p>
-    <hr>
-    <p><b>JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN</b><br>Bulan: Juli 2026</p>
-  </div>
-
+  <!-- Tabel Jurnal -->
   <table id="jurnalTable" border="1" style="border-collapse:collapse; width:100%;">
     <tr>
       <th>No</th><th>Hari</th><th>Tanggal</th><th>Jam ke-</th>
@@ -37,32 +28,31 @@
 <script>
 function cetakPDF(){
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p','pt','a4');
+  const doc = new jsPDF('landscape','pt','a4'); // Landscape A4
 
-  // Kop surat
-  doc.setFontSize(12);
-  doc.text("YAYASAN AL – IHSAN AL ISLAMI", 40, 40);
-  doc.text("MTs. AL IHSAN TANAH GROGOT", 40, 60);
-  doc.text("NPSN: 30410000 | NSM: 12.12.64.01.0002", 40, 80);
-  doc.text("Alamat: Jl. Senaken Ds. Senaken RT. IV Tanah Grogot Kab. Paser - Kalimantan Timur 76211", 40, 100);
-  doc.text("Telp. 0543-5236320 | Email: mtsalihsan_senaken@yahoo.com", 40, 120);
-  doc.text("JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN", 40, 150);
-  doc.text("Bulan: Juli 2026", 40, 170);
+  // Tambahkan kop surat sebagai gambar
+  // Pastikan kop.jpg sudah tersedia di server atau base64
+  doc.addImage("kop.jpg", "JPEG", 40, 20, 750, 100); 
+
+  // Judul
+  doc.setFontSize(14);
+  doc.text("JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN", 40, 140);
+  doc.text("Bulan: Juli 2026", 40, 160);
 
   // Tabel jurnal
-  doc.autoTable({ html: '#jurnalTable', startY: 200 });
+  doc.autoTable({ html: '#jurnalTable', startY: 180 });
 
-  // Tanda tangan
+  // Tanda tangan di halaman terakhir
   let finalY = doc.lastAutoTable.finalY + 50;
-  doc.text("Paser, 31 Juli 2026", 300, finalY);
-  doc.text("Kepala Madrasah", 80, finalY+30);
-  doc.text("Guru Mata Pelajaran", 350, finalY+30);
+  doc.text("Paser, 31 Juli 2026", 600, finalY);
+  doc.text("Kepala Madrasah", 100, finalY+30);
+  doc.text("Guru Mata Pelajaran", 600, finalY+30);
 
-  doc.text("Ahmad Syafi'i Badar, S.Pd.I", 80, finalY+100);
-  doc.text("NIP: -", 80, finalY+115);
+  doc.text("Ahmad Syafi'i Badar, S.Pd.I", 100, finalY+100);
+  doc.text("NIP: -", 100, finalY+115);
 
-  doc.text("Nurlailatul Hasanah, S.Ag", 350, finalY+100);
-  doc.text("NIP: 197311272005012002", 350, finalY+115);
+  doc.text("Nurlailatul Hasanah, S.Ag", 600, finalY+100);
+  doc.text("NIP: 197311272005012002", 600, finalY+115);
 
   // Simpan PDF
   doc.save("Jurnal_LKH_Juli2026.pdf");
