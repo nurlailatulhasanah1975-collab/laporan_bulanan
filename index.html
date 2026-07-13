@@ -1,110 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Jurnal LKH dengan Setting</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <style>
-    table { border-collapse: collapse; table-layout: fixed; }
-    th, td { border: 1px solid black; text-align: center; padding: 2px; }
-    #settingPanel { display:none; border:1px solid #aaa; padding:10px; margin:10px; background:#f9f9f9; }
-    input, select { width: 100%; box-sizing: border-box; }
-  </style>
+  <title>Jurnal & LKH Juli 2026</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-<h2>JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN</h2>
+  <!-- Kop Surat -->
+  <div id="kopSurat">
+    <h3>YAYASAN AL – IHSAN AL ISLAMI</h3>
+    <h4>MTs. AL IHSAN TANAH GROGOT</h4>
+    <p>NPSN: 30410000 | NSM: 12.12.64.01.0002</p>
+    <p>Alamat: Jl. Senaken Ds. Senaken RT. IV Tanah Grogot Kab. Paser - Kalimantan Timur 76211</p>
+    <p>Telp. 0543-5236320 | Email: mtsalihsan_senaken@yahoo.com</p>
+    <hr>
+    <p><b>JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN</b><br>Bulan: Juli 2026</p>
+  </div>
 
-<!-- Panel Password -->
-<div id="passwordPanel">
-  <label>Masukkan Password Setting:</label>
-  <input type="password" id="pwdInput">
-  <button onclick="checkPassword()">Buka Setting</button>
-</div>
+  <!-- Tabel Jurnal -->
+  <table id="jurnalTable" border="1" style="border-collapse:collapse; width:100%;">
+    <tr>
+      <th>No</th><th>Hari</th><th>Tanggal</th><th>Jam ke-</th>
+      <th>Kelas/Ekskul</th><th>Mata Pelajaran</th><th>No KI/KD</th>
+      <th>Kegiatan/Materi</th><th>Hasil</th><th>Vol</th>
+      <th>S</th><th>I</th><th>A</th><th>Ket</th>
+    </tr>
+    <!-- baris isi jurnal diisi guru -->
+  </table>
 
-<!-- Panel Setting -->
-<div id="settingPanel">
-  <h3>Pengaturan (Sheet DATA)</h3>
-  Jumlah Ruang Kelas: <input type="number" id="ruangKelas" value="6"><br>
-  Status Madrasah: <input type="text" id="statusMadrasah" value="Terakreditasi A"><br>
-  Internet: <input type="text" id="internet" value="Ada"><br>
-  Nama Guru: <input type="text" id="namaGuru" value="Nurlailatul Hasanah, S.Ag"><br>
-  NIP Guru: <input type="text" id="nipGuru" value="197311272005012002"><br>
-  No Sertifikasi: <input type="text" id="noSertifikasi" value="2111423801163"><br>
-  Pangkat/Gol Ruang: <input type="text" id="pangkat" value="Guru madya pembina tingkat I, IV/b"><br>
-  Status Guru: <input type="text" id="statusGuru" value="SKI dan Akidah Akhlak"><br>
-  <button onclick="closeSetting()">Tutup Setting</button>
-</div>
+  <!-- Tanda tangan -->
+  <div id="ttd" style="margin-top:50px; text-align:center;">
+    <p>Paser, 31 Juli 2026</p>
+    <table style="width:100%; text-align:center;">
+      <tr>
+        <td>Kepala Madrasah</td>
+        <td>Guru Mata Pelajaran</td>
+      </tr>
+      <tr>
+        <td style="height:80px;"></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Ahmad Syafi'i Badar, S.Pd.I<br>NIP: -</td>
+        <td>Nurlailatul Hasanah, S.Ag<br>NIP: 197311272005012002</td>
+      </tr>
+    </table>
+  </div>
 
-<!-- Tabel Jurnal -->
-<table id="jurnalTable" border="1">
-  <tr>
-    <th>No</th><th>Hari</th><th>Tanggal</th><th>Jam ke-</th>
-    <th>Kelas/Ekskul</th><th>Mata Pelajaran</th><th>No KI/KD</th>
-    <th>Kegiatan/Materi</th><th>Hasil</th><th>Vol</th>
-    <th>S</th><th>I</th><th>A</th><th>Ket</th>
-  </tr>
-</table>
-
-<button onclick="addRow()">Tambahkan baris baru</button>
-<button onclick="downloadExcel()">Download Excel</button>
+  <button onclick="cetakPDF()">Cetak PDF</button>
 
 <script>
-// Password proteksi
-function checkPassword(){
-  let pwd = document.getElementById("pwdInput").value;
-  if(pwd === "MataramNo34"){
-    document.getElementById("settingPanel").style.display = "block";
-    alert("Setting terbuka!");
-  } else {
-    alert("Password salah, setting tetap terkunci.");
-  }
-}
-function closeSetting(){
-  document.getElementById("settingPanel").style.display = "none";
-  alert("Setting ditutup kembali.");
-}
-
-// Rumus ambil variabel dari setting
-function hitungJamMengajar(){
-  let ruang = document.getElementById("ruangKelas").value;
-  return ruang * 2; // contoh rumus: jam = ruang * 2
-}
-
-// Hari otomatis dari tanggal
-function getHari(tanggal) {
-  let hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-  let d = new Date(tanggal);
-  return hari[d.getDay()];
-}
-
-function addRow() {
-  let table = document.getElementById("jurnalTable");
-  let row = table.insertRow(-1);
-
-  row.insertCell(0).innerHTML = table.rows.length - 1;
-  row.insertCell(1).innerHTML = "<input type='text' id='hari"+(table.rows.length-1)+"' readonly>";
-  row.insertCell(2).innerHTML = "<input type='date' onchange='updateHari(this)'>";
-  row.insertCell(3).innerHTML = "<input type='text' value='"+hitungJamMengajar()+"'>"; 
-  row.insertCell(4).innerHTML = "<select><option>VII A</option><option>VII B</option><option>VIII A</option></select>";
-  row.insertCell(5).innerHTML = "<select><option>SKI</option><option>Akidah Akhlak</option></select>";
-  row.insertCell(6).innerHTML = "<input type='text'>";
-  row.insertCell(7).innerHTML = "<input type='text'>";
-  row.insertCell(8).innerHTML = "<input type='text' value='Terlaksana' readonly>";
-  row.insertCell(9).innerHTML = "<input type='text'>";
-  row.insertCell(10).innerHTML = "<input type='number' min='0'>";
-  row.insertCell(11).innerHTML = "<input type='number' min='0'>";
-  row.insertCell(12).innerHTML = "<input type='number' min='0'>";
-  row.insertCell(13).innerHTML = "<input type='text'>";
-}
-
-function updateHari(input) {
-  let rowIndex = input.parentNode.parentNode.rowIndex;
-  let hariCell = document.getElementById("hari"+rowIndex);
-  hariCell.value = getHari(input.value);
-}
-
-function downloadExcel() {
-  var wb = XLSX.utils.table_to_book(document.getElementById('jurnalTable'));
-  XLSX.writeFile(wb, 'Jurnal_LKH.xlsx');
+function cetakPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p','pt','a4');
+  doc.html(document.body, {
+    callback: function (doc) {
+      doc.save("Jurnal_LKH_Juli2026.pdf");
+    },
+    x: 20,
+    y: 20
+  });
 }
 </script>
 </body>
