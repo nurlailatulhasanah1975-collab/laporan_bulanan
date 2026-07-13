@@ -6,28 +6,35 @@
   <style>
     table { border-collapse: collapse; table-layout: fixed; }
     th, td { border: 1px solid black; text-align: center; padding: 2px; }
-    #settingPanel { display:none; border:1px solid #aaa; padding:10px; margin:10px; }
+    #settingPanel { display:none; border:1px solid #aaa; padding:10px; margin:10px; background:#f9f9f9; }
     input, select { width: 100%; box-sizing: border-box; }
   </style>
 </head>
 <body>
 <h2>JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN</h2>
 
-<!-- Panel Setting (terkunci) -->
+<!-- Panel Password -->
 <div id="passwordPanel">
   <label>Masukkan Password Setting:</label>
   <input type="password" id="pwdInput">
   <button onclick="checkPassword()">Buka Setting</button>
 </div>
 
+<!-- Panel Setting -->
 <div id="settingPanel">
   <h3>Pengaturan (Sheet DATA)</h3>
   Jumlah Ruang Kelas: <input type="number" id="ruangKelas" value="6"><br>
   Status Madrasah: <input type="text" id="statusMadrasah" value="Terakreditasi A"><br>
   Internet: <input type="text" id="internet" value="Ada"><br>
-  <!-- Tambahkan variabel lain sesuai sheet DATA -->
+  Nama Guru: <input type="text" id="namaGuru" value="Nurlailatul Hasanah, S.Ag"><br>
+  NIP Guru: <input type="text" id="nipGuru" value="197311272005012002"><br>
+  No Sertifikasi: <input type="text" id="noSertifikasi" value="2111423801163"><br>
+  Pangkat/Gol Ruang: <input type="text" id="pangkat" value="Guru madya pembina tingkat I, IV/b"><br>
+  Status Guru: <input type="text" id="statusGuru" value="SKI dan Akidah Akhlak"><br>
+  <button onclick="closeSetting()">Tutup Setting</button>
 </div>
 
+<!-- Tabel Jurnal -->
 <table id="jurnalTable" border="1">
   <tr>
     <th>No</th><th>Hari</th><th>Tanggal</th><th>Jam ke-</th>
@@ -51,6 +58,10 @@ function checkPassword(){
     alert("Password salah, setting tetap terkunci.");
   }
 }
+function closeSetting(){
+  document.getElementById("settingPanel").style.display = "none";
+  alert("Setting ditutup kembali.");
+}
 
 // Rumus ambil variabel dari setting
 function hitungJamMengajar(){
@@ -72,7 +83,7 @@ function addRow() {
   row.insertCell(0).innerHTML = table.rows.length - 1;
   row.insertCell(1).innerHTML = "<input type='text' id='hari"+(table.rows.length-1)+"' readonly>";
   row.insertCell(2).innerHTML = "<input type='date' onchange='updateHari(this)'>";
-  row.insertCell(3).innerHTML = "<input type='text' value='"+hitungJamMengajar()+"'>"; // contoh pakai rumus setting
+  row.insertCell(3).innerHTML = "<input type='text' value='"+hitungJamMengajar()+"'>"; 
   row.insertCell(4).innerHTML = "<select><option>VII A</option><option>VII B</option><option>VIII A</option></select>";
   row.insertCell(5).innerHTML = "<select><option>SKI</option><option>Akidah Akhlak</option></select>";
   row.insertCell(6).innerHTML = "<input type='text'>";
