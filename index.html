@@ -3,9 +3,9 @@
 <head>
   <title>Jurnal & LKH Juli 2026</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-  <!-- Kop Surat -->
   <div id="kopSurat">
     <h3>YAYASAN AL – IHSAN AL ISLAMI</h3>
     <h4>MTs. AL IHSAN TANAH GROGOT</h4>
@@ -16,7 +16,6 @@
     <p><b>JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN</b><br>Bulan: Juli 2026</p>
   </div>
 
-  <!-- Tabel Jurnal -->
   <table id="jurnalTable" border="1" style="border-collapse:collapse; width:100%;">
     <tr>
       <th>No</th><th>Hari</th><th>Tanggal</th><th>Jam ke-</th>
@@ -24,27 +23,14 @@
       <th>Kegiatan/Materi</th><th>Hasil</th><th>Vol</th>
       <th>S</th><th>I</th><th>A</th><th>Ket</th>
     </tr>
-    <!-- baris isi jurnal diisi guru -->
+    <tr>
+      <td>1</td><td>Rabu</td><td>1 Juli 2026</td><td>07.30-10.00</td>
+      <td>VII A</td><td>SKI</td><td>-</td>
+      <td>Membuat analisis hari efektif pembelajaran</td><td>Terlaksana</td><td>1 Keg</td>
+      <td></td><td></td><td></td><td></td>
+    </tr>
+    <!-- baris lain diisi guru -->
   </table>
-
-  <!-- Tanda tangan -->
-  <div id="ttd" style="margin-top:50px; text-align:center;">
-    <p>Paser, 31 Juli 2026</p>
-    <table style="width:100%; text-align:center;">
-      <tr>
-        <td>Kepala Madrasah</td>
-        <td>Guru Mata Pelajaran</td>
-      </tr>
-      <tr>
-        <td style="height:80px;"></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>Ahmad Syafi'i Badar, S.Pd.I<br>NIP: -</td>
-        <td>Nurlailatul Hasanah, S.Ag<br>NIP: 197311272005012002</td>
-      </tr>
-    </table>
-  </div>
 
   <button onclick="cetakPDF()">Cetak PDF</button>
 
@@ -52,13 +38,34 @@
 function cetakPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p','pt','a4');
-  doc.html(document.body, {
-    callback: function (doc) {
-      doc.save("Jurnal_LKH_Juli2026.pdf");
-    },
-    x: 20,
-    y: 20
-  });
+
+  // Kop surat
+  doc.setFontSize(12);
+  doc.text("YAYASAN AL – IHSAN AL ISLAMI", 40, 40);
+  doc.text("MTs. AL IHSAN TANAH GROGOT", 40, 60);
+  doc.text("NPSN: 30410000 | NSM: 12.12.64.01.0002", 40, 80);
+  doc.text("Alamat: Jl. Senaken Ds. Senaken RT. IV Tanah Grogot Kab. Paser - Kalimantan Timur 76211", 40, 100);
+  doc.text("Telp. 0543-5236320 | Email: mtsalihsan_senaken@yahoo.com", 40, 120);
+  doc.text("JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN", 40, 150);
+  doc.text("Bulan: Juli 2026", 40, 170);
+
+  // Tabel jurnal
+  doc.autoTable({ html: '#jurnalTable', startY: 200 });
+
+  // Tanda tangan
+  let finalY = doc.lastAutoTable.finalY + 50;
+  doc.text("Paser, 31 Juli 2026", 300, finalY);
+  doc.text("Kepala Madrasah", 80, finalY+30);
+  doc.text("Guru Mata Pelajaran", 350, finalY+30);
+
+  doc.text("Ahmad Syafi'i Badar, S.Pd.I", 80, finalY+100);
+  doc.text("NIP: -", 80, finalY+115);
+
+  doc.text("Nurlailatul Hasanah, S.Ag", 350, finalY+100);
+  doc.text("NIP: 197311272005012002", 350, finalY+115);
+
+  // Simpan PDF
+  doc.save("Jurnal_LKH_Juli2026.pdf");
 }
 </script>
 </body>
