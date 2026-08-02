@@ -1,111 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Jurnal LKH dengan Setting</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <style>
-    table { border-collapse: collapse; table-layout: fixed; }
-    th, td { border: 1px solid black; text-align: center; padding: 2px; }
-    #settingPanel { display:none; border:1px solid #aaa; padding:10px; margin:10px; background:#f9f9f9; }
-    input, select { width: 100%; box-sizing: border-box; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jurnal LKH Generator</title>
+
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<h2>JURNAL MENGAJAR DAN LAPORAN KINERJA HARIAN</h2>
 
-<!-- Panel Password -->
-<div id="passwordPanel">
-  <label>Masukkan Password Setting:</label>
-  <input type="password" id="pwdInput">
-  <button onclick="checkPassword()">Buka Setting</button>
+<div class="container">
+
+    <!-- HEADER -->
+    <header class="header">
+        <img src="assets/logo.png" alt="Logo MTs" class="logo">
+
+        <div class="title">
+            <h1>JURNAL LKH GENERATOR</h1>
+            <p>MTs. Al Ihsan Tanah Grogot</p>
+        </div>
+    </header>
+
+
+    <!-- FORM IDENTITAS -->
+    <section class="card">
+
+        <h2>Identitas Guru</h2>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Nama Guru</label>
+                <input type="text" id="namaGuru">
+            </div>
+
+            <div class="form-group">
+                <label>NIP</label>
+                <input type="text" id="nip">
+            </div>
+
+            <div class="form-group">
+                <label>No. Sertifikasi</label>
+                <input type="text" id="sertifikasi">
+            </div>
+
+            <div class="form-group">
+                <label>Pangkat / Golongan</label>
+                <input type="text" id="pangkat">
+            </div>
+
+            <div class="form-group">
+                <label>Pendidikan</label>
+                <input type="text" id="pendidikan">
+            </div>
+
+            <div class="form-group">
+                <label>Status Guru</label>
+                <input type="text" id="status">
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- TEMPLATE -->
+    <section class="card">
+
+        <h2>Template Excel</h2>
+
+        <label class="upload-box">
+
+            <input
+                type="file"
+                id="templateFile"
+                accept=".xlsx,.xls"
+                hidden>
+
+            <div class="upload-content">
+
+                <div class="upload-icon">
+                    📄
+                </div>
+
+                <div class="upload-title">
+                    Klik untuk memilih Template Excel
+                </div>
+
+                <div class="upload-subtitle">
+                    atau drag & drop file ke area ini
+                </div>
+
+                <div id="fileName" class="filename">
+                    Belum ada file dipilih
+                </div>
+
+            </div>
+
+        </label>
+
+    </section>
+
+
+    <!-- BUTTON -->
+    <section class="button-area">
+
+        <button id="btnProses" disabled>
+            PROSES
+        </button>
+
+    </section>
+
 </div>
 
-<!-- Panel Setting -->
-<div id="settingPanel">
-  <h3>Pengaturan (Sheet DATA)</h3>
-  Jumlah Ruang Kelas: <input type="number" id="ruangKelas" value="6"><br>
-  Status Madrasah: <input type="text" id="statusMadrasah" value="Terakreditasi A"><br>
-  Internet: <input type="text" id="internet" value="Ada"><br>
-  Nama Guru: <input type="text" id="namaGuru" value="Nurlailatul Hasanah, S.Ag"><br>
-  NIP Guru: <input type="text" id="nipGuru" value="197311272005012002"><br>
-  No Sertifikasi: <input type="text" id="noSertifikasi" value="2111423801163"><br>
-  Pangkat/Gol Ruang: <input type="text" id="pangkat" value="Guru madya pembina tingkat I, IV/b"><br>
-  Status Guru: <input type="text" id="statusGuru" value="SKI dan Akidah Akhlak"><br>
-  <button onclick="closeSetting()">Tutup Setting</button>
-</div>
+<script src="js/app.js"></script>
 
-<!-- Tabel Jurnal -->
-<table id="jurnalTable" border="1">
-  <tr>
-    <th>No</th><th>Hari</th><th>Tanggal</th><th>Jam ke-</th>
-    <th>Kelas/Ekskul</th><th>Mata Pelajaran</th><th>No KI/KD</th>
-    <th>Kegiatan/Materi</th><th>Hasil</th><th>Vol</th>
-    <th>S</th><th>I</th><th>A</th><th>Ket</th>
-  </tr>
-</table>
-
-<button onclick="addRow()">Tambahkan baris baru</button>
-<button onclick="downloadExcel()">Download Excel</button>
-
-<script>
-// Password proteksi
-function checkPassword(){
-  let pwd = document.getElementById("pwdInput").value;
-  if(pwd === "MataramNo34"){
-    document.getElementById("settingPanel").style.display = "block";
-    alert("Setting terbuka!");
-  } else {
-    alert("Password salah, setting tetap terkunci.");
-  }
-}
-function closeSetting(){
-  document.getElementById("settingPanel").style.display = "none";
-  alert("Setting ditutup kembali.");
-}
-
-// Rumus ambil variabel dari setting
-function hitungJamMengajar(){
-  let ruang = document.getElementById("ruangKelas").value;
-  return ruang * 2; // contoh rumus: jam = ruang * 2
-}
-
-// Hari otomatis dari tanggal
-function getHari(tanggal) {
-  let hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-  let d = new Date(tanggal);
-  return hari[d.getDay()];
-}
-
-function addRow() {
-  let table = document.getElementById("jurnalTable");
-  let row = table.insertRow(-1);
-
-  row.insertCell(0).innerHTML = table.rows.length - 1;
-  row.insertCell(1).innerHTML = "<input type='text' id='hari"+(table.rows.length-1)+"' readonly>";
-  row.insertCell(2).innerHTML = "<input type='date' onchange='updateHari(this)'>";
-  row.insertCell(3).innerHTML = "<input type='text' value='"+hitungJamMengajar()+"'>"; 
-  row.insertCell(4).innerHTML = "<select><option>VII A</option><option>VII B</option><option>VIII A</option></select>";
-  row.insertCell(5).innerHTML = "<select><option>SKI</option><option>Akidah Akhlak</option></select>";
-  row.insertCell(6).innerHTML = "<input type='text'>";
-  row.insertCell(7).innerHTML = "<input type='text'>";
-  row.insertCell(8).innerHTML = "<input type='text' value='Terlaksana' readonly>";
-  row.insertCell(9).innerHTML = "<input type='text'>";
-  row.insertCell(10).innerHTML = "<input type='number' min='0'>";
-  row.insertCell(11).innerHTML = "<input type='number' min='0'>";
-  row.insertCell(12).innerHTML = "<input type='number' min='0'>";
-  row.insertCell(13).innerHTML = "<input type='text'>";
-}
-
-function updateHari(input) {
-  let rowIndex = input.parentNode.parentNode.rowIndex;
-  let hariCell = document.getElementById("hari"+rowIndex);
-  hariCell.value = getHari(input.value);
-}
-
-function downloadExcel() {
-  var wb = XLSX.utils.table_to_book(document.getElementById('jurnalTable'));
-  XLSX.writeFile(wb, 'Jurnal_LKH.xlsx');
-}
-</script>
 </body>
 </html>
