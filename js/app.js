@@ -37,9 +37,11 @@ btnProses.addEventListener("click", async function () {
 
         await loadTemplateGuru(file);
 
-        await loadMesin();
+await loadMesin();
 
-        alert("✔ Template valid.\nMesin berhasil dimuat.");
+testFormula();
+
+alert("✔ Template valid.\nMesin berhasil dimuat.");
 
     } catch (err) {
 
