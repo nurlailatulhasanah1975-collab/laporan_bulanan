@@ -23,3 +23,30 @@ fileInput.addEventListener("change", function () {
     btnProses.disabled = false;
 
 });
+
+
+// =======================================================
+// Tombol PROSES
+// =======================================================
+
+btnProses.addEventListener("click", async function () {
+
+    try {
+
+        const file = fileInput.files[0];
+
+        await loadTemplateGuru(file);
+
+        await loadMesin();
+
+        alert("✔ Template valid.\nMesin berhasil dimuat.");
+
+    } catch (err) {
+
+        alert("Template tidak valid.\n\n" + err.message);
+
+        console.error(err);
+
+    }
+
+});
