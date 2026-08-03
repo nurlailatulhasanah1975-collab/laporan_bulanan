@@ -43,10 +43,10 @@ btnProses.addEventListener("click", async function () {
 
     } catch (err) {
 
-        alert("Template tidak valid.\n\n" + err.message);
+    console.error(err);
 
-        console.error(err);
+    alert(err.message);
 
-    }
+}
 
 });
